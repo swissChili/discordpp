@@ -5,6 +5,8 @@
 #ifndef DISCORDPP_DISCORDPP_HH
 #define DISCORDPP_DISCORDPP_HH
 
+#define BOOST_COROUTINES_NO_DEPRECATION_WARNING
+#include <boost/asio/spawn.hpp>
 #include <vector>
 #include <string>
 
@@ -22,7 +24,7 @@ namespace discordpp {
         int sequence_ = -1;
         bool gotACK = true;
     public:
-        std::multimap<std::string, std::function<void(json)>> handlers;
+        std::multimap<std::string, std::function<void(boost::asio::yield_context, json)>> handlers;
 
         Bot() {
             needInit["Bot"] = true;
@@ -37,7 +39,7 @@ namespace discordpp {
 
     protected:
         void sendHeartbeat() {
-            if(!gotACK){
+            if (!gotACK) {
                 std::cerr << "Discord Servers did not respond to heartbeat. Reconnect not implemented.\n";
                 exit(1);
             }
@@ -52,10 +54,10 @@ namespace discordpp {
                         sendHeartbeat();
                     }
             );
-            if(sequence_ >= 0) {
-                send(1, sequence_);
-            }else{
-                send(1, {});
+            if (sequence_ >= 0) {
+                spawn(*aioc, [this](boost::asio::yield_context yield){send(yield, 1, sequence_);});
+            } else {
+                spawn(*aioc, [this](boost::asio::yield_context yield){send(yield, 1, {});});
             }
         }
 
@@ -65,11 +67,17 @@ namespace discordpp {
             switch (payload["op"].get<int>()) {
                 case 0:  // Dispatch:           dispatches an event
                     sequence_ = payload["s"].get<int>();
-                    if(handlers.find(payload["t"]) == handlers.end()){
+                    if (handlers.find(payload["t"]) == handlers.end()) {
                         std::cerr << "No handlers defined for " << payload["t"] << "\n";
-                    }else{
-                        for(auto handler = handlers.lower_bound(payload["t"]); handler != handlers.upper_bound(payload["t"]); handler++){
-                            handler->second(payload["d"]);
+                    } else {
+                        for (auto handler = handlers.lower_bound(payload["t"]);
+                             handler != handlers.upper_bound(payload["t"]); handler++) {
+                            boost::asio::spawn(
+                                    *aioc,
+                                    [&handler, &payload](boost::asio::yield_context yield) {
+                                        handler->second(yield, payload["d"]);
+                                    }
+                            );
                         }
                     }
                     break;
@@ -85,15 +93,24 @@ namespace discordpp {
                 case 10: // Hello:              sent immediately after connecting, contains heartbeat and server debug information
                     heartrate_ = std::make_unique<std::chrono::milliseconds>(payload["d"]["heartbeat_interval"]);
                     sendHeartbeat();
-                    send(2, {
-                            {"token",      token},
-                            {"properties", {
-                                                   {"$os", "linux"},
-                                                   {"$browser", "discordpp"},
-                                                   {"$device", "discordpp"},
-                                           }
+                    boost::asio::spawn(
+                            *aioc, [this](boost::asio::yield_context yield){
+                                send(
+                                        yield,
+                                        2,
+                                        {
+                                                {"token",      token},
+                                                {
+                                                 "properties", {
+                                                                       {"$os", "linux"},
+                                                                       {"$browser", "discordpp"},
+                                                                       {"$device", "discordpp"},
+                                                               }
+                                                }
+                                        }
+                                );
                             }
-                    });
+                    );
                     break;
                 case 11: // Heartbeat ACK:      sent immediately following a client heartbeat that was received
                     gotACK = true;
