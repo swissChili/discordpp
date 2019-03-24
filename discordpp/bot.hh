@@ -15,6 +15,7 @@
 namespace discordpp {
     using json = nlohmann::json;
     using snowflake = uint64_t;
+    namespace asio = boost::asio;
 
     class Bot : virtual BotStruct {
         std::unique_ptr<boost::asio::steady_timer> pacemaker_;
@@ -33,6 +34,12 @@ namespace discordpp {
             token = tokenIn;
             aioc = aiocIn;
             needInit["Bot"] = false;
+        }
+
+        json call(std::string requestType, std::string targetURL, json body) override {
+            // Add ratelimiting here
+            auto result = doCall(requestType, targetURL, body);
+            return result.first;
         }
 
     protected:

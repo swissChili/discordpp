@@ -20,9 +20,13 @@ namespace discordpp {
 
     class BotStruct {
     public:
-        virtual ~BotStruct(){};
-        virtual json call(std::string requestType, std::string targetURL, json body = {}) = 0;
-        virtual void send(int opcode, json payload = {}) = 0;
+        virtual ~BotStruct() = default;
+        virtual json call(std::string requestType, std::string targetURL, json body = {}){
+            return doCall(requestType, targetURL, body).first;
+        };
+        virtual void send(int opcode, json payload = {}){
+            return doSend(opcode, payload);
+        };
 
         void run(){
             bool ready = true;
@@ -45,6 +49,8 @@ namespace discordpp {
         }
 
         virtual void recievePayload(json payload) = 0;
+        virtual std::pair<json, std::string> doCall(std::string requestType, std::string targetURL, json body = {}) = 0;
+        virtual void doSend(int opcode, json payload = {}) = 0;
 
         std::map<std::string, bool> needInit;
         unsigned int apiVersion = 6;
