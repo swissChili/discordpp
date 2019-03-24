@@ -11,6 +11,7 @@
 #include <nlohmann/json.hpp>
 
 #include "botStruct.hh"
+#include "buckets.hh"
 
 namespace discordpp {
     using json = nlohmann::json;
