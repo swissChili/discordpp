@@ -28,6 +28,7 @@ Included <sup>(Git submodules)</sup>
 Building <sup>(Complicated) <sup>(Out of Date)</sup></sup>
 You can also find detailed setup instructions in the [https://github.com/DiscordPP/echo-bot](Echo) repository, currently on the [refactor branch](https://github.com/DiscordPP/echo-bot/tree/dpp-refactor)
 ---
+You can also find detailed setup instructions in the [https://github.com/DiscordPP/echo-bot](Echo) repository, currently on the [refactor branch](https://github.com/DiscordPP/echo-bot/tree/dpp-refactor)
 * Download:
     1. Download or `git clone` Discord++, a Discord++ REST module, and a Discord++ Websocket module.
     2. Place them all in a subdirectory of your project.
