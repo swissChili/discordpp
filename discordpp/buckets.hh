@@ -10,7 +10,7 @@
 namespace discordpp {
     std::string getBucket(std::string toBucket){
         static std::vector<std::pair<std::regex, std::string>> buckets;
-        if(buckets.size() == 0){
+        if(buckets.empty()){
             std::string src[]{
                     "GET/guilds/{guild.id}/audit-logs",
                     "GET/channels/{channel.id}",

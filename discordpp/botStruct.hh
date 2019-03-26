@@ -6,6 +6,7 @@
 #define EXAMPLE_BOT_BOTREQUIRED_HH
 
 #include <iostream>
+#include <utility>
 
 #include <boost/asio.hpp>
 
@@ -13,6 +14,8 @@
 
 namespace discordpp {
     using json = nlohmann::json;
+
+    typedef std::function<void(json)> callback;
 
     struct ratelimit{
         int millis;

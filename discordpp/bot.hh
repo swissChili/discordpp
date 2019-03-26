@@ -23,6 +23,12 @@ namespace discordpp {
         std::unique_ptr<std::chrono::milliseconds> heartrate_;
         int sequence_ = -1;
         bool gotACK = true;
+        struct call{
+            std::string requestType;
+            std::string targetURL;
+            json body;
+        };
+        std::multimap<time_t, call> callQueue;
     public:
         std::multimap<std::string, std::function<void(json)>> handlers;
 
@@ -38,7 +44,10 @@ namespace discordpp {
         }
 
         json call(std::string requestType, std::string targetURL, json body) override {
-            // Add ratelimiting here
+            std::string bucket = getBucket(requestType + targetURL);
+
+
+
             auto result = doCall(requestType, targetURL, body);
             return result.first;
         }
