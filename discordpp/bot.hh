@@ -43,7 +43,7 @@ namespace discordpp {
             needInit["Bot"] = false;
         }
 
-        json call(std::string requestType, std::string targetURL, json body) override {
+        virtual json call(const std::string& requestType, const std::string& targetURL, const json& body) override {
             std::string bucket = getBucket(requestType + targetURL);
 
 
