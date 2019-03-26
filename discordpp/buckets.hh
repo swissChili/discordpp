@@ -108,7 +108,7 @@ namespace discordpp {
             };
             std::regex majorParam(R"(\{(channel\.id|guild\.id|webhook\.id)\})");
             std::regex anyParam(R"(\{.+?\})");
-            for(std::string path : src){
+            for(const std::string &path : src){
                 std::string pattern = std::regex_replace(std::regex_replace(path, majorParam, "(.+?)"), anyParam, ".+?");
                 std::string replace = path;
                 for(int i = 1; std::regex_match(path, majorParam);i++){
@@ -124,7 +124,7 @@ namespace discordpp {
                 return std::regex_replace(toBucket, bucket.first, bucket.second);
             }
         }
-        return "";
+        throw "Invalid path";
     }
 }
 
