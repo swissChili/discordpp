@@ -8,7 +8,7 @@
 #include <regex>
 
 namespace discordpp {
-    void getBucket(std::string path){
+    std::string getBucket(std::string toBucket){
         static std::vector<std::pair<std::regex, std::string>> buckets;
         if(buckets.size() == 0){
             std::string src[]{
@@ -117,9 +117,14 @@ namespace discordpp {
                 buckets.emplace_back(pattern, replace);
             }
         }
+        static std::regex doubleSlash = std::regex("//");
+        toBucket = std::regex_replace(toBucket, doubleSlash, "/");
         for(const auto& bucket : buckets){
-
+            if(std::regex_match(toBucket, bucket.first)){
+                return std::regex_replace(toBucket, bucket.first, bucket.second);
+            }
         }
+        return "";
     }
 }
 
