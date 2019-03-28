@@ -25,7 +25,7 @@ function scanythingamabob(before, after){
     $(".http-req").each(function() {
         //console.log(parseInt($(this).text().split("\n")[2].split(" ")[0].replace(/\,/g,'')));
         var verbs = $(this).find(".http-req-verb").text().split('/');
-        var url = $(this).find(".http-req-url").text().replace(/\{(?!(channel\.id|guild\.id|webhook\.id)).+?\}/g, "{}");
+        var url = $(this).find(".http-req-url").text();//.replace(/\{(?!(channel\.id|guild\.id|webhook\.id)).+?\}/g, "{}");
         verbs.forEach(function(verb) {
             //console.log(before + verb + url + after);
             result += before + verb + url + after + '\n';
