@@ -56,7 +56,7 @@ namespace discordpp {
             }
         }
 
-        void recievePayload(json payload) override {
+        void receivePayload(json payload) override {
             //std::cerr << "Recieved Payload: " << payload.dump(4) << '\n';
 
             switch (payload["op"].get<int>()) {
