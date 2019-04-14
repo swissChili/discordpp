@@ -103,5 +103,3 @@ namespace discordpp {
         }
     };
 }
-
-#endif //DISCORDPP_DISCORDPP_HH

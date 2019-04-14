@@ -178,4 +178,3 @@ namespace discordpp{
 	}
 }
 
-#endif //DISCORDPP_BOTSTRUCT_HH
