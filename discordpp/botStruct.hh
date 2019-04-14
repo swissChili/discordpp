@@ -2,8 +2,7 @@
 // Created by Aidan on 6/21/2018.
 //
 
-#ifndef DISCORDPP_BOTSTRUCT_HH
-#define DISCORDPP_BOTSTRUCT_HH
+#pragma once
 
 #include <iostream>
 #include <regex>

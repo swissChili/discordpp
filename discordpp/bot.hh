@@ -2,8 +2,7 @@
 // Created by aidan on 11/7/15.
 //
 
-#ifndef DISCORDPP_DISCORDPP_HH
-#define DISCORDPP_DISCORDPP_HH
+#pragma once
 
 #include <vector>
 #include <string>
